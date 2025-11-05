@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-minikube-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cicd-minikube
+  template:
+    metadata:
+      labels:
+        app: cicd-minikube
+    spec:
+      containers:
+      - name: cicd-minikube
+        image: cicd-minikube:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cicd-minikube-service
+spec:
+  type: NodePort
+  selector:
+    app: cicd-minikube
+  ports:
+    - port: 5000
+      targetPort: 5000
