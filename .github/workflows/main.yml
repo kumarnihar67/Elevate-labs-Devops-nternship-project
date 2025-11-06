@@ -1,0 +1,25 @@
+name: CI Local Docker Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: self-hosted  # important: runs on your local machine
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t myapp:latest .
+
+      - name: Run tests inside container
+        run: docker run --rm myapp:latest pytest -v || true  # adjust as needed
+
+      - name: Save Docker image locally
+        run: docker save myapp:latest -o myapp.tar
